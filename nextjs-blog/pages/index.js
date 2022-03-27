@@ -3,6 +3,7 @@ import Layout, { siteTitle } from '../components/layout'
 import utilStyles from '../styles/utils.module.css'
 import Link from 'next/link'
 import { getSortedPostsData } from '../lib/posts'
+import Date from '../components/date'
 
 /*
 Example code of server-side rendering
@@ -21,16 +22,27 @@ export async function getServerSideProps(context) {
 */
 
 /*
+Static generatio without data + fetch data in the client-side
+
+The team behind Next.js has created a React hook for data fetching called SWR. 
+We highly recommend it if you’re fetching data on the client side. 
+It handles caching, revalidation, focus tracking, refetching on interval, and more.
+
+This approach works well for user dashboard pages, for example. 
+Because a dashboard is a private, user-specific page, SEO is not relevant, 
+and the page doesn’t need to be pre-rendered. 
+The data is frequently updated, which requires request-time data fetching.
+
 Ejemplo SWR client-side rendering para una aplicación de mensajería
 
 const { data } = useSWR("/api/chat-messages", fetcher, {
   subscribe(key, mutate) {
-    // start connection to the WebSocket API
-    const ws = new WebSocket("wss://my.app/api/chat-messages");
-    ws.onmessage = (event) => {
-      mutate((messages) => [...messages, JSON.parse(event.data)], false);
-    };
-    return () => ws.close();
+	// start connection to the WebSocket API
+	const ws = new WebSocket("wss://my.app/api/chat-messages");
+	ws.onmessage = (event) => {
+	  mutate((messages) => [...messages, JSON.parse(event.data)], false);
+	};
+	return () => ws.close();
   },
 });
 */
@@ -66,11 +78,13 @@ export default function Home({ allPostsData }) {
 				<ul className={utilStyles.list}>
 					{allPostsData.map(({ id, date, title }) => (
 						<li className={utilStyles.listItem} key={id}>
-							{title}
+							<Link href={`/posts/${id}`}>
+								<a>{title}</a>
+							</Link>
 							<br />
-							{id}
-							<br />
-							{date}
+							<small className={utilStyles.lightText}>
+								<Date dateString={date} />
+							</small>
 						</li>
 					))}
 				</ul>
