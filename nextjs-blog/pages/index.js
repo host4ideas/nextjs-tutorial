@@ -22,7 +22,7 @@ export async function getServerSideProps(context) {
 */
 
 /*
-Static generatio without data + fetch data in the client-side
+Static generation without data + fetch data in the client-side
 
 The team behind Next.js has created a React hook for data fetching called SWR. 
 We highly recommend it if you’re fetching data on the client side. 
